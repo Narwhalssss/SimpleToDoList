@@ -11,10 +11,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 
 
 public class ToDoListGUI {
@@ -225,12 +223,25 @@ public class ToDoListGUI {
     }
 
     private void displayTasks() {
+        // Sort tasks based on priority level
+        Collections.sort(tasks, (task1, task2) -> {
+            // Define the priority order
+            List<String> priorityOrder = Arrays.asList("High", "Medium", "Low", "Normal");
+
+            // Get the index of the priority level for each task
+            int index1 = priorityOrder.indexOf(task1.getPriority());
+            int index2 = priorityOrder.indexOf(task2.getPriority());
+
+            // Compare the indices to determine the sorting order
+            return Integer.compare(index1, index2);
+        });
+
+        // Clear the existing task list model
         taskListModel.clear();
-        tasks.sort(Comparator.comparing(Task::getPriority)); // Sort tasks based on priority
+
+        // Add the sorted tasks to the task list model
         for (Task task : tasks) {
-            String taskDetails = String.format("%s - %s - %s", task.getTaskName(), task.getDateTime(),
-                    task.isCompleted() ? "Completed" : "Incomplete");
-            taskListModel.addElement(taskDetails);
+            taskListModel.addElement(task.toString());
         }
     }
 
